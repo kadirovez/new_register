@@ -1,0 +1,71 @@
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+
+    # Application ==============================
+    app_name: str = "template-fastapi"
+    frontend_url: str = "portal.hmc.az"
+    app_version: str = "1.0.0"
+    debug: bool = False
+    environment: str = "production"
+
+    # Database =================================
+    database_engine: str = 'postgresql+psycopg'
+    database_ip: str = 'localhost'
+    database_port: str = '1234'
+    database_name: str = 'postgres'
+    database_username: str = 'postgres'
+    database_password: str = 'password'
+
+    # Security =================================
+    encryption_key : str = ''
+    secret_key : str = ''
+    algorithm : str = 'HS256'
+    access_token_expire_minutes : int = 5
+    refresh_token_expire_days : int = 30
+    ip_check_enabled : bool = True
+    max_attempt_per_ip : int = 10
+    rate_limit_minutes : int = 5
+
+    user_email_code_limit : int = 10
+    user_bad_password_limit : int = 5
+
+    email_code_timeout : int = 10
+
+    session_email_code_limit : int = 10
+
+    # Password policy ==========================
+    password_min_length : int = 10
+    password_require_uppercase : bool = True
+    password_require_lowercase : bool = True
+    password_require_digit : bool = True
+    password_require_symbol : bool = True
+    password_min_life_hours : int = 24
+    password_max_life_days : int = 90
+
+    # Mail server ==============================
+    # pass
+
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        env_file_encoding='utf-8',
+        case_sensitive=True,
+        extra='ignore'
+    )
+
+    @property
+    def database_url(self) -> str:
+        return (
+            f'{self.database_engine}://'
+            f'{self.database_username}:{self.database_password}@'
+            f'{self.database_ip}:{self.database_port}/'
+            f'{self.database_name}'
+        )
+
+
+# Singleton instance
+settings = Settings()
+
+
+
