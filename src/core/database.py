@@ -35,4 +35,3 @@ async def close_db() -> None :
     ''' Close database connections'''
     await engine.dispose()
 
-
