@@ -17,10 +17,8 @@ def _coerce_value(value: str, col_type):
 
     if value is None or value == '':
         return None
-
     if isinstance(col_type, SABoolean):
         return value.lower() in ('true', '1', 'yes')
-
     return value
 
 
@@ -55,7 +53,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 continue
 
             query = select(self.model).where(
-                getattr(self.name, field) == data[field]
+                getattr(self.model, field) == data[field]
             )
 
             if exclude_id:
@@ -87,13 +85,6 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 detail='Model not found'
             )
         return db_obj
-
-    async def get_all(
-            self,
-            db: AsyncSession,
-            id: int
-    ) -> List[ModelType]:
-        pass
 
     async def create(
             self,
@@ -146,9 +137,3 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         await db.delete(db_obj)
         await db.commit()
         return db_obj
-
-
-
-
-
-

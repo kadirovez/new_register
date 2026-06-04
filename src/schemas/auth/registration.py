@@ -1,47 +1,61 @@
 
-from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
+from pydantic import BaseModel
+
 from src.schemas.base import BaseResponseSchema
-from src.schemas.fields import USERNAME_FIELD, NAME_FIELD, PASSWORD_FIELD, EMAIL_FIELD, OTP_CODE_FIELD
+from src.schemas.fields import (
+    USERNAME_FIELD,
+    NAME_FIELD,
+    PASSWORD_FIELD,
+    EMAIL_FIELD,
+)
 
 
-class RegistrationUsernameRequest(BaseModel):
-    username : USERNAME_FIELD
+class RegistrationProfileRequest(BaseModel):
+    """Step 1: first name, last name, username, email."""
+
+    first_name: NAME_FIELD
+    last_name: NAME_FIELD
+    username: USERNAME_FIELD
+    email: EMAIL_FIELD
+
 
 class RegistrationPasswordRequest(BaseModel):
-    password : PASSWORD_FIELD
+    """Step 2: set password."""
 
-class RegistrationPasswordConfirm(BaseModel):
-    confirm_password : PASSWORD_FIELD
-
-class RegistrationPersonalInformation(BaseModel):
-    first_name : NAME_FIELD
-    last_name : NAME_FIELD
-
-class RegistrationEmailRequest(BaseModel):
-    email : EMAIL_FIELD
-
-class RegistrationEmailOTPRequest(BaseModel):
-    email_otp : OTP_CODE_FIELD
-
-class RegistrationSendOTPResponse(BaseResponseSchema):
-    email_id : str
-    email_expire_at : datetime
-
-class RegistrationUpdateBaseModel(BaseModel):
-    username : Optional[str] = None
-    first_name : Optional[str] = None
-    last_name : Optional[str] = None
-    password : Optional[str] = None
-    password_is_confirmed : Optional[bool] = None
-    email : Optional[str] = None
-    email_is_confirmed : Optional[bool] = None
-    email_code_limit : Optional[int] = None
-    email_code_id : Optional[str] = None
-    email_code_sent : Optional[str] = None
-    email_code_expire_at : Optional[str] = None
-    is_completed : Optional[bool] = None
+    password: PASSWORD_FIELD
 
 
+class RegistrationConfirmPasswordRequest(BaseModel):
+    """Step 3: confirm password."""
+
+    confirm_password: PASSWORD_FIELD
+
+
+class RegistrationUpdate(BaseModel):
+    """Fields allowed when updating a registration session."""
+
+    username: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+    password_is_confirmed: Optional[bool] = None
+    is_completed: Optional[bool] = None
+
+
+class RegistrationFinishResponse(BaseResponseSchema):
+    """Response after successful registration."""
+
+    user_id: int
+
+
+# --- Not used in current registration flow ---
+# class RegistrationEmailOTPRequest(BaseModel):
+#     email_otp: OTP_CODE_FIELD
+#
+# class RegistrationSendOTPResponse(BaseResponseSchema):
+#     email_id: str
+#     email_expire_at: datetime

@@ -1,37 +1,34 @@
 
-from sqlalchemy import String, Boolean, DateTime, Integer, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
+
+from sqlalchemy import String, Boolean, DateTime, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.core.settings import settings
 from src.models.base import BaseDataModel
-from datetime import datetime
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from src.models.auth.login_session import Login
 
 class User(BaseDataModel):
 
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
-    username : Mapped[str] = mapped_column(
+    username: Mapped[str] = mapped_column(
         String(32),
         unique=True,
-        Nullable=False,
-        index=True
+        nullable=False,
+        index=True,
     )
 
-    first_name : Mapped[str] = mapped_column(
+    first_name: Mapped[str] = mapped_column(
         String(32),
-        Nullable=False,
-        index=True
+        nullable=False,
+        index=True,
     )
 
-    last_name : Mapped[str] = mapped_column(
+    last_name: Mapped[str] = mapped_column(
         String(32),
-        Nullable=False,
-        index=True
+        nullable=False,
+        index=True,
     )
 
     # Email
@@ -39,41 +36,42 @@ class User(BaseDataModel):
         String(255),
         unique=True,
         nullable=False,
-        index=True
+        index=True,
     )
 
-    email_confirmed : Mapped[bool] = mapped_column(
+    email_confirmed: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
         default=False,
-        server_default='false'
+        server_default='false',
     )
 
-    email_code_limit : Mapped[int] = mapped_column(
+    email_code_limit: Mapped[int] = mapped_column(
+        Integer,
         default=settings.user_email_code_limit,
-        nullable=False
+        nullable=False,
     )
 
-    bad_email_code_time : Mapped[datetime | None] = mapped_column(
+    bad_email_code_time: Mapped[datetime | None] = mapped_column(
         DateTime,
         default=None,
-        nullable=True
+        nullable=True,
     )
 
     # Password
     password : Mapped[int] = mapped_column(
         String(255),
-        nullable=False
+        nullable=False,
     )
 
-    password_change : Mapped[datetime | None] = mapped_column(
+    password_change: Mapped[datetime | None] = mapped_column(
         DateTime,
         default=None,
-        nullable=True
+        nullable=True,
     )
 
-    bad_password_count : Mapped[int] = mapped_column(
+    bad_password_count: Mapped[int] = mapped_column(
+        Integer,
         default=0,
-        nullable=False
+        nullable=False,
     )
-

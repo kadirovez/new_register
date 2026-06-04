@@ -1,83 +1,101 @@
 
+from datetime import datetime
+
+from sqlalchemy import String, Boolean, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Boolean, DateTime
 
-from src.models.base import BaseDataModel
-
-import datetime
+from src.models.auth.base import SessionAuthDataBase
 
 
-class Login(BaseDataModel):
+class Login(SessionAuthDataBase):
+    """
+    Temporary login session.
 
-    __tablename__ = 'login'
+    Email flow: email -> password -> email OTP.
+    Username flow: username -> confirm full email -> password -> email OTP.
+    """
 
-    # User info
-    username : Mapped[str] = mapped_column(
-        String(32),
-        nullable=False
+    __tablename__ = "login"
+
+    login_method: Mapped[str | None] = mapped_column(
+        String(16),
+        nullable=True,
     )
 
-    # Password
-    password : Mapped[str] = mapped_column(
+    user_id: Mapped[int | None] = mapped_column(
+        Integer,
+        ForeignKey("user.id"),
+        nullable=True,
+        index=True,
+    )
+
+    username: Mapped[str | None] = mapped_column(
+        String(32),
+        nullable=True,
+    )
+
+    email: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=False
+        nullable=True,
     )
 
-    password_is_confirmed : Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        server_default='false'
-    )
-
-    password_is_validated : Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        server_default='false'
-    )
-
-    # Email
-
-    email : Mapped[str] = mapped_column(
+    password: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=False
+        nullable=True,
     )
 
-    email_is_confirmed : Mapped[bool] = mapped_column(
+    password_is_validated: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         nullable=False,
-        server_default='false'
+        server_default="false",
     )
 
-    email_code_sent : Mapped[str] = mapped_column(
+    email_matched: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default="false",
+    )
+
+    email_is_confirmed: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default="false",
+    )
+
+    email_code_sent: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default="false",
+    )
+
+    email_code_id: Mapped[str | None] = mapped_column(
         String(32),
-        nullable=False
+        nullable=True,
     )
 
-    email_code_id : Mapped[str | None] = mapped_column(
-        String(32),
-        nullable=True
-    )
-
-    email_code_expire_at : Mapped[datetime | None] = mapped_column(
+    email_code_expire_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         default=None,
-        nullable=True
+        nullable=True,
     )
 
-    # TOTP fields
-
-    totp_code_is_confirmed : Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        server_default='false'
-    )
-
-    totp_token : Mapped[str] = mapped_column(
-        String(32),
-        nullable=True
-    )
-
+    # password_is_confirmed: Mapped[bool] = mapped_column(
+    #     Boolean,
+    #     default=False,
+    #     nullable=False,
+    #     server_default="false",
+    # )
+    # totp_code_is_confirmed: Mapped[bool] = mapped_column(
+    #     Boolean,
+    #     default=False,
+    #     nullable=False,
+    #     server_default="false",
+    # )
+    # totp_token: Mapped[str | None] = mapped_column(
+    #     String(32),
+    #     nullable=True,
+    # )

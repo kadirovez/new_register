@@ -72,7 +72,7 @@ async def _get_session_from_token(
                 detail='Token ip mismatch'
             )
 
-    session_obj = crud.get_by_session(db, session=session_token)
+    session_obj = await crud.get_by_session(db, session=session_token)
 
     if not session_obj:
         raise HTTPException(
@@ -98,5 +98,5 @@ async def get_registration_session(
         db: AsyncSession = Depends(get_db)
 ):
     ''' Gets registration sesion via jwt '''
-    return await _get_session_from_token(request, credentials, db, login_crud)
+    return await _get_session_from_token(request, credentials, db, registration_crud)
 

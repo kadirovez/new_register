@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     email_code_timeout : int = 10
 
     session_email_code_limit : int = 10
+    session_expire_minute : int = 15
 
     # Password policy ==========================
     password_min_length : int = 10
@@ -55,6 +56,10 @@ class Settings(BaseSettings):
     )
 
     @property
+    def max_attempts_per_ip(self) -> int:
+        return self.max_attempt_per_ip
+
+    @property
     def database_url(self) -> str:
         return (
             f'{self.database_engine}://'
@@ -66,6 +71,3 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
-
-
-
