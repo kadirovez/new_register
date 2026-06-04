@@ -8,7 +8,7 @@ from src.schemas.fields import USERNAME_FIELD, NAME_FIELD, PASSWORD_FIELD, EMAIL
 
 
 class UserCreate(BaseModel):
-    """Schema for creating a User (internal / admin use)."""
+    ''' Schema for creating user '''
 
     username: USERNAME_FIELD
     first_name: NAME_FIELD
@@ -19,6 +19,8 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    ''' Schema for updating user '''
+
     password: Optional[str] = Field(default=None, min_length=settings.password_min_length)
     bad_password_count: Optional[int] = None
     first_name: Optional[str] = None

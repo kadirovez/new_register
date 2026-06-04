@@ -46,7 +46,12 @@ class Settings(BaseSettings):
     password_max_life_days : int = 90
 
     # Mail server ==============================
-    # pass
+    smtp_server: str = ''
+    smtp_port: int = 587
+    smtp_user:str = ''
+    smtp_password: str = ''
+    smtp_sender_email: str = ''
+    smtp_sender_name: str = ''
 
     model_config = SettingsConfigDict(
         env_file='.env',

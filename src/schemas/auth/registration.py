@@ -1,5 +1,4 @@
 
-from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -14,7 +13,7 @@ from src.schemas.fields import (
 
 
 class RegistrationProfileRequest(BaseModel):
-    """Step 1: first name, last name, username, email."""
+    ''' 1st step: personal info '''
 
     first_name: NAME_FIELD
     last_name: NAME_FIELD
@@ -23,19 +22,19 @@ class RegistrationProfileRequest(BaseModel):
 
 
 class RegistrationPasswordRequest(BaseModel):
-    """Step 2: set password."""
+    ''' 2nd step: password '''
 
     password: PASSWORD_FIELD
 
 
 class RegistrationConfirmPasswordRequest(BaseModel):
-    """Step 3: confirm password."""
+    ''' 3nd step: confirm password '''
 
     confirm_password: PASSWORD_FIELD
 
 
 class RegistrationUpdate(BaseModel):
-    """Fields allowed when updating a registration session."""
+    ''' Field for updating registration session '''
 
     username: Optional[str] = None
     first_name: Optional[str] = None
@@ -47,12 +46,12 @@ class RegistrationUpdate(BaseModel):
 
 
 class RegistrationFinishResponse(BaseResponseSchema):
-    """Response after successful registration."""
+    ''' Response schema, might be unuseful '''
 
     user_id: int
 
 
-# --- Not used in current registration flow ---
+#
 # class RegistrationEmailOTPRequest(BaseModel):
 #     email_otp: OTP_CODE_FIELD
 #
