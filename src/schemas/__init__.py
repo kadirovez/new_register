@@ -12,10 +12,11 @@ from src.schemas.auth.login import (
 )
 from src.schemas.auth.registration import (
     RegistrationProfileRequest,
+    RegistrationEmailOTPRequest,
     RegistrationPasswordRequest,
     RegistrationConfirmPasswordRequest,
     RegistrationUpdate,
-    RegistrationFinishResponse,
+    RegistrationCompleteResponse,
 )
 from src.schemas.auth.user import UserCreate, UserUpdate
 
@@ -24,10 +25,11 @@ __all__ = [
     "UserCreate",
     "UserUpdate",
     "RegistrationProfileRequest",
+    "RegistrationEmailOTPRequest",
     "RegistrationPasswordRequest",
     "RegistrationConfirmPasswordRequest",
     "RegistrationUpdate",
-    "RegistrationFinishResponse",
+    "RegistrationCompleteResponse",
     "LoginUsernameRequest",
     "LoginEmailRequest",
     "LoginConfirmEmailRequest",

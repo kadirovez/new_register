@@ -44,6 +44,10 @@ class CRUDSessionBase(CRUDBase[ModelType, CreateSchemaType, UpdateSchemaType]):
         )
         return list(result.scalars().all())
 
+    def count_recent_by_ip(self):
+        # Coming soon... 
+        pass
+
 
     async def reset(
             self,

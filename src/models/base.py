@@ -26,7 +26,7 @@ class BaseDataModel(Base):
         nullable=False
     )
 
-    is_active : Mapped[Boolean] = mapped_column(
+    is_active : Mapped[bool] = mapped_column(
         Boolean,
         server_default='True',
         nullable=False

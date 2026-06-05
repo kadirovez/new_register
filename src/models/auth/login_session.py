@@ -51,6 +51,7 @@ class Login(SessionAuthDataBase):
         server_default="false",
     )
 
+    # Field for matching email on masking check step
     email_matched: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
@@ -58,6 +59,7 @@ class Login(SessionAuthDataBase):
         server_default="false",
     )
 
+    # Confirming email on otp step
     email_is_confirmed: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
