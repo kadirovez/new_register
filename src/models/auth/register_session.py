@@ -9,7 +9,7 @@ from src.models.auth.base import SessionAuthDataBase
 
 class Registration(SessionAuthDataBase):
 
-    __tablename__ = "registration"
+    __tablename__ = 'registration'
 
     username: Mapped[str | None] = mapped_column(
         String(32),

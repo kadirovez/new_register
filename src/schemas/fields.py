@@ -13,7 +13,7 @@ USERNAME_FIELD = Annotated[
         ...,
         min_length=3,
         max_length=32,
-        description="Username",
+        description='Username',
     ),
     BeforeValidator(normalize_lowercase),
 ]
@@ -25,7 +25,7 @@ NAME_FIELD = Annotated[
         min_length=2,
         max_length=32,
         pattern=r"^[a-zA-Z]+$",
-        description="Name",
+        description='Name',
     ),
 ]
 
@@ -35,7 +35,7 @@ PASSWORD_FIELD = Annotated[
         ...,
         min_length=settings.password_min_length,
         max_length=255,
-        description="Password",
+        description='Password',
     ),
     AfterValidator(validate_password_policy),
 ]
@@ -45,7 +45,7 @@ EMAIL_FIELD = Annotated[
     Field(
         ...,
         max_length=255,
-        description="Email address",
+        description='Email address',
     ),
     BeforeValidator(normalize_lowercase),
 ]
@@ -57,6 +57,6 @@ OTP_CODE_FIELD = Annotated[
         min_length=6,
         max_length=6,
         pattern=r"^\d{6}$",
-        description="6-digit email OTP code",
+        description='6-digit email OTP code',
     ),
 ]

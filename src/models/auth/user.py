@@ -10,7 +10,7 @@ from src.models.base import BaseDataModel
 
 class User(BaseDataModel):
 
-    __tablename__ = "user"
+    __tablename__ = 'user'
 
     username: Mapped[str] = mapped_column(
         String(32),

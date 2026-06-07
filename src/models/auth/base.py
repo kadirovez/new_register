@@ -30,5 +30,5 @@ class SessionAuthDataBase(SessionDatabaseModel):
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )

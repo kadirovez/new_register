@@ -8,14 +8,8 @@ from src.models.auth.base import SessionAuthDataBase
 
 
 class Login(SessionAuthDataBase):
-    """
-    Temporary login session.
 
-    Email flow: email -> password -> email OTP.
-    Username flow: username -> confirm full email -> password -> email OTP.
-    """
-
-    __tablename__ = "login"
+    __tablename__ = 'login'
 
     login_method: Mapped[str | None] = mapped_column(
         String(16),
@@ -24,7 +18,7 @@ class Login(SessionAuthDataBase):
 
     user_id: Mapped[int | None] = mapped_column(
         Integer,
-        ForeignKey("user.id"),
+        ForeignKey('user.id'),
         nullable=True,
         index=True,
     )
@@ -48,7 +42,7 @@ class Login(SessionAuthDataBase):
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )
 
     # Field for matching email on masking check step
@@ -56,7 +50,7 @@ class Login(SessionAuthDataBase):
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )
 
     # Confirming email on otp step
@@ -64,7 +58,7 @@ class Login(SessionAuthDataBase):
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )
 
     email_code_sent: Mapped[str] = mapped_column(
@@ -87,13 +81,13 @@ class Login(SessionAuthDataBase):
     #     Boolean,
     #     default=False,
     #     nullable=False,
-    #     server_default="false",
+    #     server_default='false',
     # )
     # totp_code_is_confirmed: Mapped[bool] = mapped_column(
     #     Boolean,
     #     default=False,
     #     nullable=False,
-    #     server_default="false",
+    #     server_default='false',
     # )
     # totp_token: Mapped[str | None] = mapped_column(
     #     String(32),

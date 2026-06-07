@@ -7,7 +7,7 @@ def mask_email(email: str) -> str:
     match = re.match(r"([^@]+)@([^@.]+)\.([a-zA-Z]+)$", email)
 
     if not match:
-        raise ValueError("Invalid email format")
+        raise ValueError('Invalid email format')
 
     local_part, domain, tld = match.groups()
     masked_local = local_part[:2] + "*" * (len(local_part) - 2)

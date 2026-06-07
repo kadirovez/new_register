@@ -1,3 +1,4 @@
+
 from typing import TYPE_CHECKING
 
 from src.models.auth.base import SessionDatabaseModel
@@ -14,12 +15,12 @@ class Main(SessionDatabaseModel):
     __tablename__ = 'main'
 
     user_id: Mapped[int | None] = mapped_column(
-        ForeignKey("user.id", ondelete="CASCADE"),
+        ForeignKey('user.id', ondelete='CASCADE'),
         nullable=True,
         index=True
     )
 
     user: Mapped["User"] = relationship(
         "User",
-        back_populates="main"
+        back_populates='main'
     )
