@@ -1,7 +1,7 @@
+
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.settings import settings
 from src.crud.auth.login import login_crud
 from src.deps.database import get_db
 from src.deps.session import get_login_session
@@ -16,11 +16,12 @@ from src.schemas.auth.login import (
 )
 from src.services.auth.login import login_service
 from src.services.session import session_service
+from src.utils.ip_address import get_ip
 
-router = APIRouter(prefix="/login", tags=["login"])
+router = APIRouter(prefix='/login', tags=['login'])
 
 
-@router.get("/start", response_model=Token)
+@router.get('/start', response_model=Token)
 async def start_login(
     request: Request,
     db: AsyncSession = Depends(get_db),
@@ -28,11 +29,9 @@ async def start_login(
     ''' Starts login session '''
     return await session_service.start_session(
         db=db,
-        request=request,
+        ip_address=get_ip(request),
         crud=login_crud,
         create_schema=CreateSessionSchema,
-        rate_limit_minutes=settings.rate_limit_minutes,
-        max_attempts=settings.max_attempts_per_ip,
     )
 
 @router.post('/identification')
@@ -44,16 +43,15 @@ async def identification(
     '''
     Gets username or email as identifier, and validates it.
     Sets login_method marker to 'username' or 'email'
-    From this point, flow splits by two paths
     '''
     return await login_service.validate_identifier(
         db=db,
-        login_sesion=login_session,
+        login_session=login_session,
         obj_in=obj_in
     )
 
 
-@router.post("/password")
+@router.post('/password')
 async def submit_password(
     obj_in: LoginPasswordRequest,
     login_session: Login = Depends(get_login_session),
@@ -67,7 +65,7 @@ async def submit_password(
     )
 
 
-@router.post("/confirm-email")
+@router.post('/confirm-email')
 async def confirm_email(
     obj_in: LoginConfirmEmailRequest,
     login_session: Login = Depends(get_login_session),
@@ -81,7 +79,7 @@ async def confirm_email(
     )
 
 
-@router.get("/send-email-otp")
+@router.get('/send-email-otp')
 async def send_email_otp(
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
@@ -93,7 +91,7 @@ async def send_email_otp(
     )
 
 
-@router.post("/confirm-email-otp")
+@router.post('/confirm-email-otp')
 async def confirm_email_otp(
     obj_in: LoginEmailOTPRequest,
     login_session: Login = Depends(get_login_session),
@@ -115,11 +113,11 @@ async def complete_login(
     return await login_service.complete_login(
         request=request,
         db=db,
-        login_session=login_session
+        login_session=login_session,
     )
 
 
-@router.delete("/cancel")
+@router.delete('/cancel')
 async def cancel_login(
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),

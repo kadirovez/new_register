@@ -1,5 +1,6 @@
 
 from datetime import datetime, timezone
+
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,45 +17,35 @@ async def confirm_email_otp(
 ) -> StatusResponseSchema:
     ''' Checks email otp code '''
 
-
     if not registration_session.email_code_sent:
         raise HTTPException(
             status_code=400,
-            detail='Request otp first'
+            detail='Request OTP first'
         )
 
-    await registration_crud.reset(
-        db=db,
-        db_obj=registration_session,
-        keep_fields={
-            'username':True,
-            'first_name':True,
-            'last_name':True,
-            'email':True,
-            'email_code_sent':True,
-            'email_code_id':True,
-            'email_code_expire_at':True,
-        }
-    )
-
-    if registration_session.email_code_expire_at < datetime.now(timezone.utc):
+    expire_at = registration_session.email_code_expire_at
+    if expire_at and expire_at.tzinfo is None:
+        expire_at = expire_at.replace(tzinfo=timezone.utc)
+    if expire_at and expire_at < datetime.now(timezone.utc):
         raise HTTPException(
             status_code=400,
             detail='OTP expired'
         )
 
-    # Check otp code
     if registration_session.email_code_sent != obj_in.email_otp:
         raise HTTPException(
             status_code=401,
-            detail='Invalid otp code'
+            detail='Invalid OTP code'
         )
 
     await registration_crud.update(
         db=db,
         id=registration_session.id,
         obj_in=RegistrationUpdate(
-            email_is_confirmed=True
+            email_is_confirmed=True,
+            email_code_sent=None,
+            email_code_id=None,
+            email_code_expire_at=None,
         ),
     )
 

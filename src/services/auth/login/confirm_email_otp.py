@@ -6,41 +6,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.crud.auth.login import login_crud
 from src.models.auth.login_session import Login
-from src.schemas import LoginFinishResponse, LoginEmailOTPRequest, LoginUpdate
+from src.schemas import LoginEmailOTPRequest, LoginUpdate
+from src.schemas.base import StatusResponseSchema
 
 
 async def confirm_email_otp(
-        self,
         db: AsyncSession,
         login_session: Login,
         obj_in: LoginEmailOTPRequest,
-):
+) -> StatusResponseSchema:
 
-    # Check
     if not login_session.email_code_sent:
         raise HTTPException(
-            status_code=401,
+            status_code=400,
             detail='Email OTP code was not sent'
         )
 
-    # Reset
-    await login_crud.reset(
-        db=db,
-        db_obj=login_session,
-        keep_fields={
-            'login_method':True,
-            'user_id':True,
-            'username':True,
-            'email':True,
-            'email_matched':True,
-            'email_code_sent':True,
-            'email_code_id':True,
-            'password_is_validated':True,
-            'email_code_expire_at':True,
-        }
-    )
-
-    if login_session.email_code_expire_at < datetime.now(timezone.utc):
+    expire_at = login_session.email_code_expire_at
+    if expire_at and expire_at.tzinfo is None:
+        expire_at = expire_at.replace(tzinfo=timezone.utc)
+    if expire_at and expire_at < datetime.now(timezone.utc):
         raise HTTPException(
             status_code=401,
             detail='OTP code expired'
@@ -63,8 +48,4 @@ async def confirm_email_otp(
         )
     )
 
-
-
-
-
-
+    return StatusResponseSchema(status=True)

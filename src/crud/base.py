@@ -1,17 +1,17 @@
 
-from typing import Generic, TypeVar, Type, Optional, List
+from typing import Generic, TypeVar, Type, Optional
 
 from fastapi import HTTPException
-from sqlalchemy import select, func, inspect
+from sqlalchemy import select, inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 from sqlalchemy import Boolean as SABoolean
 
 from src.core.database import Base
 
-ModelType = TypeVar("ModelType", bound=Base)
-CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
-UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+ModelType = TypeVar('ModelType', bound=Base)
+CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)
+UpdateSchemaType = TypeVar('UpdateSchemaType', bound=BaseModel)
 
 def _coerce_value(value: str, col_type):
 
@@ -32,12 +32,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self._unique_fields = [
             col.name
             for col in inspect(model).columns
-            if col.unique and col.name != "id"
+            if col.unique and col.name != 'id'
         ]
 
-    def _apply_load_options(self):
+    def _apply_load_options(self, query):
         ''' Super puper tema which is nice to have, but not necessary to use '''
-        for options in self.load_list:
+        for options in self.load_options:
             query = query.options(options)
         return query
 
@@ -75,7 +75,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> Optional[ModelType]:
         ''' Gets record from database by ID '''
         query = select(self.model).where(self.model.id == id)
-        query = self._apply_load_option(query)
+        query = self._apply_load_options(query)
         result = await db.execute(query)
         db_obj = result.scalar_one_or_none()
 
@@ -98,11 +98,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         await db.commit()
-
-        query = db.select(self.model).where(self.model.id == db_obj.id)
-        query = self._apply_load_options(query)
-        result = await db.execute(query)
-        return result.scalar_one()
+        await db.refresh(db_obj)
+        return db_obj
 
     async def update(
             self,

@@ -12,32 +12,26 @@ from src.schemas.auth.registration import RegistrationCompleteResponse, Registra
 async def complete_registration(
         db: AsyncSession,
         registration_session: Registration,
-):
-    ''' Completes registration and creates user in database '''
-
+) -> RegistrationCompleteResponse:
     if registration_session.is_completed:
         raise HTTPException(
-            status_code=401,
+            status_code=400,
             detail='Session already completed'
         )
 
-    if registration_session.email_is_confirmed and registration_session.password_is_confirmed:
-        await registration_crud.update(
-            db=db,
-            db_obj=registration_session,
-            obj_in=RegistrationUpdate(
-                is_completed=True
-            )
-        )
-    else:
+    if not registration_session.email_is_confirmed:
         raise HTTPException(
-            status_code=401,
-            detail='Something went wrong'
+            status_code=400,
+            detail='Confirm email first'
         )
 
+    if not registration_session.password_is_confirmed:
+        raise HTTPException(
+            status_code=400,
+            detail='Confirm password first'
+        )
 
-    # Creates user from register session
-    await user_crud.create(
+    user = await user_crud.create(
         db=db,
         obj_in=UserCreate(
             username=registration_session.username,
@@ -45,10 +39,20 @@ async def complete_registration(
             last_name=registration_session.last_name,
             password=registration_session.password,
             email=registration_session.email,
-            email_is_confirmed=registration_session.email_is_confirmed,
-            is_active=registration_session.is_active
-        )
+            email_is_confirmed=True,
+            is_active=True,
+        ),
     )
 
+    await registration_crud.update(
+        db=db,
+        id=registration_session.id,
+        obj_in=RegistrationUpdate(is_completed=True),
+    )
 
+    await registration_crud.delete(
+        db=db,
+        id=registration_session.id
+    )
 
+    return RegistrationCompleteResponse(user_id=user.id)

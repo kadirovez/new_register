@@ -4,11 +4,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
 
     # Application ==============================
-    app_name: str = "template-fastapi"
-    frontend_url: str = "portal.hmc.az"
-    app_version: str = "1.0.0"
+    app_name: str = 'template-fastapi'
+    frontend_url: str = 'portal.hmc.az'
+    app_version: str = '1.0.0'
     debug: bool = True
-    environment: str = "production"
+    environment: str = 'production'
 
     # Database =================================
     database_engine: str = 'postgresql+psycopg'
@@ -20,9 +20,9 @@ class Settings(BaseSettings):
 
     # Security =================================
     encryption_key : str = ''
-    secret_key : str = ''
+    secret_key: str = 'blablablasecretkeytest'
     algorithm : str = 'HS256'
-    access_token_expire_minutes : int = 5
+    access_token_expire_minutes : int = 15
     refresh_token_expire_days : int = 30
     ip_check_enabled : bool = True
     max_attempt_per_ip : int = 10
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',
-        case_sensitive=True,
+        case_sensitive=False,
         extra='ignore'
     )
 

@@ -27,13 +27,14 @@ async def send_email_otp(
     if registration_session.email_is_confirmed:
         raise HTTPException(
             status_code=400,
-            detail="Email already confirmed"
+            detail='Email already confirmed'
         )
 
     otp_code, otp_code_id, otp_expire_at = generate_otp(
         length=6,
         timeout=settings.email_code_timeout,
     )
+    otp_code = otp_code[:6].zfill(6)
 
     # in this case otp code will be printed in terminal
     await send_email(otp_code)

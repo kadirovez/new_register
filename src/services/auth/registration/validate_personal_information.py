@@ -16,36 +16,33 @@ async def validate_personal_information(
 ) -> StatusResponseSchema:
     ''' Validates personal information : username, first name, last name, email '''
 
-    session_id = registration_session.id
-
-    username = await user_crud.get_by_username(db=db, username=obj_in.username)
-    if username:
+    if await user_crud.get_by_username(
+            db=db,
+            username=obj_in.username
+    ):
         raise HTTPException(
-            status_code=401,
+            status_code=409,
             detail='username already taken'
         )
 
-    user_email = await user_crud.get_by_email(db=db, email=obj_in.email)
-    if user_email:
+    if await user_crud.get_by_email(
+            db=db,
+            email=obj_in.email
+    ):
         raise HTTPException(
-            status_code=401,
-            detail='email already taken'
+            status_code=409,
+            detail='Email already taken'
         )
 
     await registration_crud.reset(
         db=db,
         db_obj=registration_session,
-        keep_fields={
-            'first_name':True,
-            'second_name':True,
-            'username':True,
-            'email':True,
-        }
+        keep_fields={},
     )
 
     await registration_crud.update(
         db=db,
-        id=session_id,
+        id=registration_session.id,
         obj_in=RegistrationUpdate(
             first_name=obj_in.first_name.title(),
             last_name=obj_in.last_name.title(),

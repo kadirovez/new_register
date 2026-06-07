@@ -1,3 +1,4 @@
+
 from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -17,7 +18,7 @@ class Registration(SessionAuthDataBase):
 
     first_name: Mapped[str | None] = mapped_column(
         String(32),
-        nullable=False,
+        nullable=True,
     )
 
     last_name: Mapped[str | None] = mapped_column(
@@ -27,35 +28,35 @@ class Registration(SessionAuthDataBase):
 
     email: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=False,
+        nullable=True,
     )
 
     password: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=False,
+        nullable=True,
     )
 
     password_is_confirmed: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )
 
     email_is_confirmed: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         nullable=False,
-        server_default="false",
+        server_default='false',
     )
 
     email_code_sent: Mapped[str | None] = mapped_column(
-        String(256),
-        nullable=False,
+        String(6),
+        nullable=True,
     )
 
     email_code_id: Mapped[str | None] = mapped_column(
-        String(6),
+        String(32),
         nullable=True,
     )
 

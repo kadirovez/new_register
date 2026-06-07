@@ -1,7 +1,7 @@
+
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.settings import settings
 from src.crud.auth.register import registration_crud
 from src.deps.database import get_db
 from src.deps.session import get_registration_session
@@ -48,7 +48,7 @@ async def submit_profile(
     Validating personal data:
     username, first name, last name, email
     '''
-    return await registration_service.validate_personal_info(
+    return await registration_service.validate_personal_information(
         db=db,
         registration_session=registration_session,
         obj_in=obj_in,

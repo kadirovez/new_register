@@ -9,15 +9,13 @@ from src.services.auth.registration.cancel_registration import cancel_registrati
 
 
 class RegistrationServices:
-    ''' Service for registration flow operations '''
-
-    complete_registration = complete_registration,
-    confirm_email_otp = confirm_email_otp,
-    confirm_password = confirm_password,
-    send_email_otp = send_email_otp,
-    validate_personal_information = validate_personal_information,
-    validate_password = validate_password
-    cancel_registration = cancel_registration
+    complete_registration = staticmethod(complete_registration)
+    confirm_email_otp = staticmethod(confirm_email_otp)
+    confirm_password = staticmethod(confirm_password)
+    send_email_otp = staticmethod(send_email_otp)
+    validate_personal_information = staticmethod(validate_personal_information)
+    validate_password = staticmethod(validate_password)
+    cancel_registration = staticmethod(cancel_registration)
 
 
 registration_service = RegistrationServices()

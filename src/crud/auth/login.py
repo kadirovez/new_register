@@ -15,7 +15,7 @@ class CRUDLogin(CRUDSessionBase[Login, CreateSessionSchema, LoginUpdate]):
         "password_is_validated": False,
         "email_matched": False,
         "email_is_confirmed": False,
-        "email_code_sent": False,
+        "email_code_sent": None,
         "email_code_id": None,
         "email_code_expire_at": None,
         "is_completed": False,

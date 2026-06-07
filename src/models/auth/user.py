@@ -59,7 +59,7 @@ class User(BaseDataModel):
     )
 
     # Password
-    password : Mapped[int] = mapped_column(
+    password : Mapped[str] = mapped_column(
         String(255),
         nullable=False,
     )
@@ -76,9 +76,15 @@ class User(BaseDataModel):
         nullable=False,
     )
 
+    bad_password_time: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        default=None,
+        nullable=True,
+    )
+
     main: Mapped["Main | None"] = relationship(
-        "Main",
-        back_populates="user",
+        'Main',
+        back_populates='user',
         uselist=False,
-        cascade="all, delete-orphan",
+        cascade='all, delete-orphan',
     )

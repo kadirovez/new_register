@@ -14,7 +14,7 @@ class CRUDRegistration(CRUDSessionBase[Registration, CreateSessionSchema, Regist
         "password": None,
         "password_is_confirmed": False,
         "email_is_confirmed": False,
-        "email_code_sent": False,
+        "email_code_sent": None,
         "email_code_id": None,
         "email_code_expire_at": None,
         "is_completed": False,

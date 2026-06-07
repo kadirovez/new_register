@@ -1,10 +1,11 @@
+
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
 from src.core.settings import settings
-from src.schemas.fields import USERNAME_FIELD, NAME_FIELD, PASSWORD_FIELD, EMAIL_FIELD
+from src.schemas.fields import USERNAME_FIELD, NAME_FIELD, EMAIL_FIELD
 
 
 class UserCreate(BaseModel):
@@ -13,7 +14,7 @@ class UserCreate(BaseModel):
     username: USERNAME_FIELD
     first_name: NAME_FIELD
     last_name: NAME_FIELD
-    password: PASSWORD_FIELD
+    password: str = Field(..., min_length=1, max_length=255)
     email: EMAIL_FIELD
     email_is_confirmed: bool = Field(default=False)
     is_active: bool = Field(default=False)

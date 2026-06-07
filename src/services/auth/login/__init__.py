@@ -9,18 +9,17 @@ from src.services.auth.login.validate_identifier import validate_identifier
 from src.services.auth.login.validate_password import validate_password
 from src.services.auth.login.validate_username import validate_username
 
+
 class LoginServices:
+    validate_username = staticmethod(validate_username)
+    validate_email = staticmethod(validate_email)
+    validate_identifier = staticmethod(validate_identifier)
+    validate_password = staticmethod(validate_password)
+    confirm_email = staticmethod(confirm_email)
+    send_email_otp = staticmethod(send_email_otp)
+    confirm_email_otp = staticmethod(confirm_email_otp)
+    complete_login = staticmethod(complete_login)
+    cancel_login = staticmethod(cancel_login)
 
-    validate_username = validate_username
-    validate_email = validate_email
-    validate_identifier = validate_identifier
-    validate_password = validate_password
-    confirm_email = confirm_email
-    send_email_otp = send_email_otp
-    confirm_email_otp = confirm_email_otp
-    complete_login = complete_login
-    cancel_login = cancel_login
 
-
-# Singleton instance 
 login_service = LoginServices()
