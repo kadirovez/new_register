@@ -67,11 +67,9 @@ class Login(SessionAuthDataBase):
         server_default="false",
     )
 
-    email_code_sent: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        server_default="false",
+    email_code_sent: Mapped[str] = mapped_column(
+        String(6),
+        nullable=True,
     )
 
     email_code_id: Mapped[str | None] = mapped_column(

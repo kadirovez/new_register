@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from sqlalchemy import String, Boolean, DateTime, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.core.settings import settings
 from src.models.base import BaseDataModel
@@ -74,4 +74,11 @@ class User(BaseDataModel):
         Integer,
         default=0,
         nullable=False,
+    )
+
+    main: Mapped["Main | None"] = relationship(
+        "Main",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
     )

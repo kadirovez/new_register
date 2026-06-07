@@ -31,3 +31,10 @@ class BaseDataModel(Base):
         server_default='True',
         nullable=False
     )
+
+    is_locked : Mapped[bool] = mapped_column(
+        Boolean,
+        server_default='False',
+        default=False,
+        nullable=False
+    )

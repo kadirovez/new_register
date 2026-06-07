@@ -13,7 +13,7 @@ class CreateSessionSchema(BaseModel):
     session : str = Field(
         ...,
         min_length=64,
-        max_length=255,
+        max_length=256,
         description='Session token'
     )
     

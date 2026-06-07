@@ -9,15 +9,11 @@ from src.models.auth.login_session import Login
 from src.schemas.addons import Token
 from src.schemas.auth.base import CreateSessionSchema
 from src.schemas.auth.login import (
-    LoginUsernameRequest,
-    LoginEmailRequest,
     LoginConfirmEmailRequest,
     LoginPasswordRequest,
     LoginEmailOTPRequest,
-    LoginMaskedEmailResponse,
-    LoginFinishResponse,
+    LoginIdentificationRequest,
 )
-from src.schemas.base import StatusResponseSchema
 from src.services.auth.login import login_service
 from src.services.session import session_service
 
@@ -29,6 +25,7 @@ async def start_login(
     request: Request,
     db: AsyncSession = Depends(get_db),
 ):
+    ''' Starts login session '''
     return await session_service.start_session(
         db=db,
         request=request,
@@ -38,39 +35,45 @@ async def start_login(
         max_attempts=settings.max_attempts_per_ip,
     )
 
+@router.post('/identification')
+async def identification(
+        obj_in: LoginIdentificationRequest,
+        login_session: Login = Depends(get_login_session),
+        db: AsyncSession = Depends(get_db)
+):
+    '''
+    Gets username or email as identifier, and validates it.
+    Sets login_method marker to 'username' or 'email'
+    From this point, flow splits by two paths
+    '''
+    return await login_service.validate_identifier(
+        db=db,
+        login_sesion=login_session,
+        obj_in=obj_in
+    )
 
-@router.post("/username", response_model=LoginMaskedEmailResponse)
-async def login_by_username(
-    obj_in: LoginUsernameRequest,
+
+@router.post("/password")
+async def submit_password(
+    obj_in: LoginPasswordRequest,
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
 ):
-    return await login_service.start_by_username(
+    ''' Validates password for both flows '''
+    return await login_service.validate_password(
         db=db,
         login_session=login_session,
         obj_in=obj_in,
     )
 
 
-@router.post("/email", response_model=StatusResponseSchema)
-async def login_by_email(
-    obj_in: LoginEmailRequest,
-    login_session: Login = Depends(get_login_session),
-    db: AsyncSession = Depends(get_db),
-):
-    return await login_service.start_by_email(
-        db=db,
-        login_session=login_session,
-        obj_in=obj_in,
-    )
-
-
-@router.post("/confirm-email", response_model=StatusResponseSchema)
+@router.post("/confirm-email")
 async def confirm_email(
     obj_in: LoginConfirmEmailRequest,
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
 ):
+    ''' Matches masked email and entered email (use only in username flow) '''
     return await login_service.confirm_email(
         db=db,
         login_session=login_session,
@@ -78,49 +81,50 @@ async def confirm_email(
     )
 
 
-@router.post("/password", response_model=StatusResponseSchema)
-async def submit_password(
-    obj_in: LoginPasswordRequest,
-    login_session: Login = Depends(get_login_session),
-    db: AsyncSession = Depends(get_db),
-):
-    return await login_service.submit_password(
-        db=db,
-        login_session=login_session,
-        obj_in=obj_in,
-    )
-
-
-@router.get("/send-email-otp", response_model=StatusResponseSchema)
+@router.get("/send-email-otp")
 async def send_email_otp(
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
 ):
+    ''' Sends email otp code to email address '''
     return await login_service.send_email_otp(
         db=db,
         login_session=login_session,
     )
 
 
-@router.post("/email-otp", response_model=LoginFinishResponse)
+@router.post("/confirm-email-otp")
 async def confirm_email_otp(
     obj_in: LoginEmailOTPRequest,
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
 ):
+    ''' Confirms email by OTP code '''
     return await login_service.confirm_email_otp(
         db=db,
         login_session=login_session,
         obj_in=obj_in,
     )
 
+@router.post('/complete-login')
+async def complete_login(
+        request:Request,
+        login_session: Login = Depends(get_login_session),
+        db: AsyncSession = Depends(get_db),
+):
+    return await login_service.complete_login(
+        request=request,
+        db=db,
+        login_session=login_session
+    )
 
-@router.delete("/cancel", response_model=StatusResponseSchema)
+
+@router.delete("/cancel")
 async def cancel_login(
     login_session: Login = Depends(get_login_session),
     db: AsyncSession = Depends(get_db),
 ):
-    return await login_service.cancel(
+    return await login_service.cancel_login(
         db=db,
         login_session=login_session,
     )

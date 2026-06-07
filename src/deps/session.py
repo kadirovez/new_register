@@ -19,19 +19,6 @@ bearer_scheme = HTTPBearer()
 ModelType = TypeVar("ModelType", bound=Base)
 
 
-async def _to_json_safe(value):
-    ''' Convert to json values '''
-    if value is None:
-        return None
-    if isinstance(value, (str, int, bool, float)):
-        return value
-    if isinstance(value, (list, tuple)):
-        return [_to_json_safe(i) for i in value]
-    if isinstance(value, dict):
-        return {str(k): _to_json_safe(v) for k, v in value.items()}
-    return str(value)
-
-
 async def _get_session_from_token(
         request : Request,
         credentials : HTTPAuthorizationCredentials,

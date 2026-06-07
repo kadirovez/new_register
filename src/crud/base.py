@@ -45,7 +45,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self,
             db: AsyncSession,
             data: dict,
-            exclude_id : int | None
+            exclude_id : int | None = None
     ):
         ''' Checks unique fields, raises 409 if violated '''
         for field in self._unique_fields:
@@ -75,7 +75,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> Optional[ModelType]:
         ''' Gets record from database by ID '''
         query = select(self.model).where(self.model.id == id)
-        query = self.apply_load_option(query)
+        query = self._apply_load_option(query)
         result = await db.execute(query)
         db_obj = result.scalar_one_or_none()
 
@@ -102,7 +102,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         query = db.select(self.model).where(self.model.id == db_obj.id)
         query = self._apply_load_options(query)
         result = await db.execute(query)
-        return result.scalars_one()
+        return result.scalar_one()
 
     async def update(
             self,
@@ -111,20 +111,18 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             obj_in: UpdateSchemaType
     ) -> ModelType:
         ''' Updates existing record '''
-        db_obj = await db.get(db=db, id=id)
-        obj_data = obj_in.model_dump(exclude_unsent=True)
-        await self._check_unique_fields(db=db, data=obj_data, exlude_id=db_obj.id)
+        db_obj = await self.get(db=db, id=id)
+        obj_data = obj_in.model_dump(exclude_unset=True)
+        await self._check_unique_fields(db=db, data=obj_data, exclude_id=db_obj.id)
 
         for key, value in obj_data.items():
             setattr(db_obj, key, value)
 
         db.add(db_obj)
         await db.commit()
+        await db.refresh(db_obj)
 
-        query = db.select(self.model).where(self.model.id == db_obj.id)
-        query = self._check_unique_fields(query)
-        result = await db.execute(query)
-        return result.scalars_one()
+        return db_obj
 
 
     async def delete(

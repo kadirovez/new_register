@@ -7,6 +7,10 @@ from pydantic import BaseModel
 from src.schemas.base import BaseResponseSchema
 from src.schemas.fields import USERNAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, OTP_CODE_FIELD
 
+class LoginIdentificationRequest(BaseModel):
+
+    login: str
+
 
 class LoginUsernameRequest(BaseModel):
     ''' Username login : step 1'''
@@ -42,8 +46,6 @@ class LoginMaskedEmailResponse(BaseResponseSchema):
     ''' Step 2 response: shows masked email '''
 
     masked_email: str
-    login_method: Literal["username"] = "username"
-
 
 class LoginUpdate(BaseModel):
     ''' Update login schema '''
@@ -56,7 +58,7 @@ class LoginUpdate(BaseModel):
     password_is_validated: Optional[bool] = None
     email_matched: Optional[bool] = None
     email_is_confirmed: Optional[bool] = None
-    email_code_sent: Optional[bool] = None
+    email_code_sent: Optional[str] = None
     email_code_id: Optional[str] = None
     email_code_expire_at: Optional[datetime] = None
     is_completed: Optional[bool] = None

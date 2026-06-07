@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
@@ -15,7 +15,8 @@ class UserCreate(BaseModel):
     last_name: NAME_FIELD
     password: PASSWORD_FIELD
     email: EMAIL_FIELD
-    email_confirmed: bool = Field(default=False)
+    email_is_confirmed: bool = Field(default=False)
+    is_active: bool = Field(default=False)
 
 
 class UserUpdate(BaseModel):
@@ -30,3 +31,5 @@ class UserUpdate(BaseModel):
     email_code_limit: Optional[int] = None
     is_active: Optional[bool] = None
     is_locked: Optional[bool] = None
+    bad_password_time : Optional[datetime] = None
+

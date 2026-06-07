@@ -7,16 +7,16 @@ class Settings(BaseSettings):
     app_name: str = "template-fastapi"
     frontend_url: str = "portal.hmc.az"
     app_version: str = "1.0.0"
-    debug: bool = False
+    debug: bool = True
     environment: str = "production"
 
     # Database =================================
     database_engine: str = 'postgresql+psycopg'
     database_ip: str = 'localhost'
-    database_port: str = '1234'
+    database_port: str = '5432'
     database_name: str = 'postgres'
-    database_username: str = 'postgres'
-    database_password: str = 'password'
+    database_username: str = 'faroosha'
+    database_password: str = '1419'
 
     # Security =================================
     encryption_key : str = ''

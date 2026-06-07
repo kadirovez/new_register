@@ -18,7 +18,7 @@ engine = create_async_engine(
 AsyncSessionLocal = async_sessionmaker(
     engine,
     class_=AsyncSession,
-    expire_on_commits=False,
+    expire_on_commit=False,
     autocommit=False,
     autoflush=False
 )
@@ -34,4 +34,5 @@ async def init_db() -> None :
 async def close_db() -> None :
     ''' Close database connections'''
     await engine.dispose()
+
 
