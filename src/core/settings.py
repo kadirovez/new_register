@@ -13,10 +13,10 @@ class Settings(BaseSettings):
     # Database =================================
     database_engine: str = 'postgresql+psycopg'
     database_ip: str = 'localhost'
-    database_port: str = '5432'
+    database_port: str = '1234'
     database_name: str = 'postgres'
-    database_username: str = 'faroosha'
-    database_password: str = '1419'
+    database_username: str = 'username'
+    database_password: str = '1111'
 
     # Security =================================
     encryption_key : str = ''
