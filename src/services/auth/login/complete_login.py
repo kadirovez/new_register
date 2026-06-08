@@ -55,11 +55,6 @@ async def complete_login(
         ),
     )
 
-    await login_crud.delete(
-        db=db,
-        id=login_session.id
-    )
-
     access_token = create_access_token(
         data={
             'session': session,

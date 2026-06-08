@@ -50,9 +50,4 @@ async def complete_registration(
         obj_in=RegistrationUpdate(is_completed=True),
     )
 
-    await registration_crud.delete(
-        db=db,
-        id=registration_session.id
-    )
-
     return RegistrationCompleteResponse(user_id=user.id)

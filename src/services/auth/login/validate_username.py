@@ -14,7 +14,7 @@ async def validate_username(
         login_session: Login,
         obj_in: LoginUsernameRequest,
 ):
-    if login_session.login_method != "username":
+    if login_session.login_method != 'username':
         raise HTTPException(
             status_code=400,
             detail='Wrong login method'
