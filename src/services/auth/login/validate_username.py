@@ -50,8 +50,8 @@ async def validate_username(
         obj_in=LoginUpdate(
             user_id=user.id,
             username=user.username,
-            email=user.email,
         ),
     )
 
     return LoginMaskedEmailResponse(masked_email=mask_email(user.email))
+

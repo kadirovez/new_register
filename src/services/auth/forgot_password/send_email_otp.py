@@ -3,30 +3,30 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.settings import settings
-from src.crud.auth.login import login_crud
-from src.models.auth.login_session import Login
-from src.schemas import LoginUpdate
+from src.crud.auth.forgot_password import forgot_password_crud
+from src.models.auth.forgot_password_session import ForgotPassword
+from src.schemas.auth.forgot_password import ForgotPasswordUpdate
 from src.schemas.base import StatusResponseSchema
 from src.utils.email import send_email
 from src.utils.generator import generate_otp
 
 
-async def send_email_otp(
+async def forgot_password_send_email_otp(
         db: AsyncSession,
-        login_session: Login,
+        forgot_password_session: ForgotPassword,
 ) -> StatusResponseSchema:
 
     # Check
-    if not login_session.password_is_validated:
+    if not forgot_password_session.email:
         raise HTTPException(
-            status_code=400,
-            detail='Validate password first'
+            status_code=401,
+            detail='Enter your email first'
         )
 
-    if not login_session.email:
+    if not forgot_password_session.email_matched:
         raise HTTPException(
-            status_code=400,
-            detail='Email not found in session'
+            status_code=401,
+            detail='Email is not validated'
         )
 
     # Create otp code
@@ -39,13 +39,13 @@ async def send_email_otp(
     # Action
     await send_email(otp_code)
 
-    await login_crud.update(
+    await forgot_password_crud.update(
         db=db,
-        id=login_session.id,
-        obj_in=LoginUpdate(
+        id=forgot_password_session.id,
+        obj_in=ForgotPasswordUpdate(
             email_code_sent=otp_code,
             email_code_id=otp_code_id,
-            email_code_expire_at=otp_expire_at,
+            email_code_expire_at=otp_expire_at
         )
     )
 

@@ -7,6 +7,7 @@ from typing import TypeVar
 from src.core.settings import settings
 from src.core.database import Base
 from src.crud.auth.base import CRUDSessionBase
+from src.crud.auth.forgot_password import forgot_password_crud
 from src.crud.auth.login import login_crud
 from src.crud.auth.register import registration_crud
 from src.deps.database import get_db
@@ -86,4 +87,13 @@ async def get_registration_session(
 ):
     ''' Gets registration sesion via jwt '''
     return await _get_session_from_token(request, credentials, db, registration_crud)
+
+
+async def get_forgot_password_session(
+        request : Request,
+        credentials : HTTPAuthorizationCredentials = Depends(bearer_scheme),
+        db: AsyncSession = Depends(get_db),
+):
+    ''' Gets forgot password session via jwt '''
+    return await _get_session_from_token(request, credentials, db, forgot_password_crud)
 

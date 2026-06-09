@@ -77,19 +77,3 @@ class Login(SessionAuthDataBase):
         nullable=True,
     )
 
-    # password_is_confirmed: Mapped[bool] = mapped_column(
-    #     Boolean,
-    #     default=False,
-    #     nullable=False,
-    #     server_default='false',
-    # )
-    # totp_code_is_confirmed: Mapped[bool] = mapped_column(
-    #     Boolean,
-    #     default=False,
-    #     nullable=False,
-    #     server_default='false',
-    # )
-    # totp_token: Mapped[str | None] = mapped_column(
-    #     String(32),
-    #     nullable=True,
-    # )

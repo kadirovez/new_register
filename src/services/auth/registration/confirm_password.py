@@ -47,7 +47,9 @@ async def confirm_password(
     await registration_crud.update(
         db=db,
         id=registration_session.id,
-        obj_in=RegistrationUpdate(password_is_confirmed=True)
+        obj_in=RegistrationUpdate(
+            password_is_confirmed=True
+        )
     )
 
     return StatusResponseSchema(status=True)

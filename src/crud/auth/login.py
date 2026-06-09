@@ -6,6 +6,8 @@ from src.schemas.auth.login import LoginUpdate
 
 
 class CRUDLogin(CRUDSessionBase[Login, CreateSessionSchema, LoginUpdate]):
+    ''' CRUD operations for login session '''
+
     reset_values = {
         "login_method": None,
         "user_id": None,

@@ -6,6 +6,8 @@ from src.schemas.auth.registration import RegistrationUpdate
 
 
 class CRUDRegistration(CRUDSessionBase[Registration, CreateSessionSchema, RegistrationUpdate]):
+    ''' CRUD operations for registration session '''
+
     reset_values = {
         "username": None,
         "first_name": None,
@@ -22,3 +24,4 @@ class CRUDRegistration(CRUDSessionBase[Registration, CreateSessionSchema, Regist
 
 
 registration_crud = CRUDRegistration(Registration)
+
