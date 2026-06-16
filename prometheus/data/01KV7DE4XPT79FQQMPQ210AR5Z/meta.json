@@ -1,0 +1,18 @@
+{
+	"ulid": "01KV7DE4XPT79FQQMPQ210AR5Z",
+	"minTime": 1781575860830,
+	"maxTime": 1781582400000,
+	"stats": {
+		"numSamples": 510,
+		"numFloatSamples": 510,
+		"numSeries": 5,
+		"numChunks": 5
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01KV7DE4XPT79FQQMPQ210AR5Z"
+		]
+	},
+	"version": 1
+}
